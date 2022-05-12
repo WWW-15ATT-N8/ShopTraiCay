@@ -1,0 +1,50 @@
+package com.se.ecofruits.service;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestUtils;
+
+import com.se.ecofruits.dao.CategoryDao;
+import com.se.ecofruits.entity.Category;
+
+
+@Service
+public class CategoryServiceImpl implements CategoryService {
+	
+	@Autowired
+	private CategoryDao categoryDao;
+	
+	@Override
+	@Transactional
+	public List<Category> getCategories() {
+		
+		return categoryDao.getCategories();
+	}
+
+	@Override
+	@Transactional
+	public void saveCategory(Category category) {
+		categoryDao.saveCategory(category);
+	}
+
+	@Override
+	@Transactional
+	public Category getCategory(int id) {
+		return categoryDao.getCategory(id);
+	}
+
+	@Override
+	@Transactional
+	public void deleteCategory(int id) {
+		categoryDao.deleteCategory(id);
+	}
+
+}
