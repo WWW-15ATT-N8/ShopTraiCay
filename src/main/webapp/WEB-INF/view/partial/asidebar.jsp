@@ -38,9 +38,15 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="pages/layout/top-nav.html" class="nav-link">
+                <a href="${pageContext.request.contextPath}/admin/category/list" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Category</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="${pageContext.request.contextPath}/admin/product/list" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Product</p>
                 </a>
               </li>
             </ul>

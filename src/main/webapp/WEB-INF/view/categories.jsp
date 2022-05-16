@@ -12,21 +12,15 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css"
-	href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
-<link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/css/adminlte.min.css">
 <link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css">
-<link rel="stylesheet" type="text/css"
-	href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" type="text/css"
-	href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.2.0/css/alt/adminlte.plugins.min.css">
 <link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.min.css">
 
 </head>
 <body class="font-sans antialiased hold-transition sidebar-mini">
-	<div class="wrapper">
+<div class="wrapper">
 	<jsp:include page="partial/navbar.jsp"></jsp:include>
 	<jsp:include page="partial/asidebar.jsp"></jsp:include>
 	
@@ -42,7 +36,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
            <jsp:include page="partial/breadcrumb.jsp">
-            	<jsp:param name="item_1" value="Home" />
+            	<jsp:param name="item_sub" value="Home" />
             	<jsp:param name="item_main" value="Category" />
             </jsp:include>
           </div><!-- /.col -->
@@ -67,19 +61,21 @@
                 </div>
               </div>
               <div class="card-body collapse show" >
-                <form @submit.prevent="search">
+                <form>
                   <div class="row">
                     <div class="col-6">
+                    	<input type="hidden" name="page" value="1">
                       <div class="form-group">
                         <label>Name:</label>
-                        <input v-model="params.name" type="search" class="form-control" style="width: 100%;" placeholder="Name">
+                        <input type="search" name="name" class="form-control" value="${ name }" style="width: 100%;" placeholder="Name">
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="form-group">
                         <label>Number Of Product:</label>
                           <div>
-                            <input type="text" class="js-range-slider mb-3" name="my_range" value="" />
+                            <input name="rangeNumOfProduct" type="text" class="js-range-slider mb-3" value="${ rangeNumOfProduct }" />
+                            
                           </div>
                         <!-- <Slider/> -->
                       </div>
@@ -87,10 +83,13 @@
                   </div>
                   <div class="row">
                     <div class="col-12 text-center">
-                      <button class="btn btn-primary btn-search" type="submit"> 
+                      <button  type="submit" class="btn btn-primary btn-search"> 
                         <i class="fa-solid fa-magnifying-glass"></i>
                         Search
-                      </button>
+                        </button>
+                       
+						<% System.out.print(request.getRequestURL()); %>
+                      
                     </div>
                   </div>
                 </form>
@@ -103,14 +102,14 @@
                 <div class="card-title">Table</div>
                 <div class="card-tools">
                   <button class="btn btn-danger mr-2">Delete Selected</button>
-                  <button class="btn btn-primary" @click="goToCreate">Add</button>
+                  <a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/category/create" style="color:white;">Add</a>
                   
                 </div>
               </div>
               <div class="card-body">
                 <div>
                   <label>Show 
-                    <select  @change="changeTableLenght" name="example_length" aria-controls="example" class="">
+                    <select name="example_length" aria-controls="example" class="">
                       <option value="10">10</option>
                       <option value="25">25</option>
                       <option value="50">50</option>
@@ -121,7 +120,7 @@
                 <table class="table table-bordered table-hover data-table-form">
                   <thead>
                     <tr>
-                      <th style="width: 70px;" class="text-center"><input type="checkbox" @click="checkAll()" v-model="checkbox.isCheckedAll"> </th>
+                      <th style="width: 70px;" class="text-center"><input type="checkbox"> </th>
                       <th class="text-capitalize">
                         Name
                       </th>
@@ -133,7 +132,13 @@
                     </tr>
                   </thead>
                   <tbody>
-                  <c:forEach items="${categories}" var="category">
+                  <c:forEach items="${categories.pageList}" var="category">
+                  	<c:url var="deleteCategory" value="/admin/category/delete">
+						<c:param name="categoryID" value="${category.categoryID}" />
+					</c:url>
+					<c:url var="updateCategory" value="/admin/category/update">
+						<c:param name="categoryID" value="${category.categoryID}" />
+					</c:url>
                   	<tr>
                   		<td class="text-center check-item" >
                   			<input type="checkbox">
@@ -141,8 +146,8 @@
                   		<td>${ category.name }</td>
                   		<td>${ category.products.size() }</td>
                   		<td>
-                  			<button id="editCategory" type="button" class="btn btn-warning mr-2"><i class="fa-solid fa-pen-to-square"></i></button>
-                        	<button id="deleteCaterory" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                  			<a id="editCategory" href="${ updateCategory }" type="button" class="btn btn-warning mr-2"><i class="fa-solid fa-pen-to-square"></i></a>
+                        	<a id="deleteCaterory" href="${ deleteCategory }" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
                   		</td>
                   	</tr>
                   </c:forEach>
@@ -155,10 +160,12 @@
                     Pagination
                   </div>
                   <div class="col-6">
-                  <%-- ${categories.getCount} --%>
-				<%-- <jsp:include page="partial/pagination.jsp">
-						<jsp:param name="link" value="${ categories }" />
-					</jsp:include> --%>
+					<jsp:include page="partial/pagination.jsp">
+            			<jsp:param name="pageCount" value="${ pageCount }" />
+            			<jsp:param name="pageCurrent" value="${ pageCurrent }" />
+            			<jsp:param name="url" value="${ url }" />
+   
+           		 	</jsp:include>
                   </div>
                 </div>
               </div>
@@ -180,13 +187,7 @@
 	<script type="text/javascript"
 		src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 	<script type="text/javascript"
-		src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-	<script type="text/javascript"
 		src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
 	<script type="text/javascript"
 		src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/js/OverlayScrollbars.min.js"></script>
 	<script type="text/javascript"
@@ -196,8 +197,6 @@
 	        type: "int",
 	        min: 0,
 	        max: 100,
-	        from: 0,
-	        to: 100,
 	        grid: true
 	    });
 		</script>

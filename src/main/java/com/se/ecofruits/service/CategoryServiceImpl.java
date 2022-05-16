@@ -47,4 +47,11 @@ public class CategoryServiceImpl implements CategoryService {
 		categoryDao.deleteCategory(id);
 	}
 
+	@Override
+	@Transactional
+	public List<Category> getCategoriesFilter(String name) {
+		
+		return categoryDao.getCategoriesFilter(name);
+	}
+
 }
