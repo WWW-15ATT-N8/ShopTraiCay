@@ -12,8 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+
 @Entity(name = "Categories")
 @Table(name = "Categories")
+@FilterDef(name = "nameFilter" ,parameters = { @ParamDef(name = "name", type = "string") })
+@Filter(name = "nameFilter" ,condition = "name like %:name%")
 public class Category implements Serializable {
 	/**
 	 * 
@@ -22,6 +28,7 @@ public class Category implements Serializable {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int categoryID;
+	
 	private String name;
 	private String description;
 	

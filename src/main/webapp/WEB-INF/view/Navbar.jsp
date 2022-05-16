@@ -1,5 +1,9 @@
+<%@page import="com.se.ecofruits.entity.*"%>
+<%@page import="java.util.List"%>
+<%@page import="java.text.DecimalFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <nav class="navbar navbar-expand-xl navbar-dark bg-dark sticky-top">
 	<div class="container-fluid">
 		<button class="navbar-toggler d-xl-none" type="button"
@@ -13,7 +17,7 @@
 		<ul class="navbar-nav  mt-2 mt-lg-0 icon-user-phone">
 			<li class="nav-item">
 			<a  class="nav-link bi bi-cart btn-person" id="icon-cart" 
-			href="${pageContext.request.contextPath}/giohang"></a>
+			href="${pageContext.request.contextPath}/giohang/"></a>
 				<!-- <button class="nav-link bi bi-cart btn-person" id="icon-cart"
 					onclick="go()"></button> -->
 			</li>
@@ -38,14 +42,14 @@
 				<li class="nav-item"><a class="nav-link" id="navbar-btn-home"
 					href="${pageContext.request.contextPath}/">Trang Chủ</a></li>
 				<li class="nav-item "><a class="nav-link" id="navbar-btn-traicaynhapkhau"
-					href="#">Trái cây nhập khẩu</a></li>
+					href="${pageContext.request.contextPath}/category/4">Trái cây nhập khẩu</a></li>
 				<li class="nav-item dropdown" id="navbar-btn-quatang"><a
-					class="nav-link dropdown-toggle" href="#"
-					id="dropdownId" aria-haspopup="true" aria-expanded="false">Sản Phẩm Khác</a>
+					class="nav-link dropdown-toggle" href=""
+					id="dropdownId" aria-haspopup="true" aria-expanded="false">Sản phẩm khác</a>
 					<div class="dropdown-menu" aria-labelledby="dropdownId">
-						<a class="dropdown-item" href="#">Giỏ Trái Cây</a>
-						<a class="dropdown-item" href="#">Hộp Quà tặng trái cây</a> 
-						<a class="dropdown-item" href="#">Khay Trái Cây</a>
+						<a class="dropdown-item" href="${pageContext.request.contextPath}/category/1">Giỏ Trái Cây</a>
+						<a class="dropdown-item" href="${pageContext.request.contextPath}/category/2">Hộp Quà tặng trái cây</a> 
+						<a class="dropdown-item" href="${pageContext.request.contextPath}/category/3">Khay Trái Cây</a>
 					</div></li>
 				
 				<li class="nav-item "><a class="nav-link" id="navbar-btn-dichvu"
@@ -58,20 +62,45 @@
 				<li class="nav-item input-search">
 					<form class="form-inline my-2 my-lg-0" id="form-search">
 						<input class="form-control mr-sm-2" id="input-search" type="text"
-							placeholder="VD: Trái cây nhập khẩu"> <span
-							class="nav-link bi bi-search" id="search"></span>
+							placeholder="VD: Trái cây nhập khẩu"> 
+						<span class="nav-link bi bi-search" id="search"></span>
 					</form>
+					<!-- <span class="nav-link bi bi-search" id="search"></span> -->
 				</li>
-				<li class="nav-item">
-					<a class="nav-link bi bi-cart btn-person-cart-pc"
-					 id="icon-cart-pc" href="${pageContext.request.contextPath}/giohang"></a>
-					<%-- <button class="nav-link bi bi-cart btn-person-cart-pc"
-						id="icon-cart-pc" href="${pageContext.request.contextPath}/giohang"></button> --%>
+				<li class="nav-item" >
+					<% 
+						int total = 0;
+						if((Object)session.getAttribute("total") == null)
+							session.setAttribute("total", 0);
+						else{
+							List<Cart> carts = (List<Cart>)session.getAttribute("carts");
+							if(carts != null)
+								for(Cart c : carts)
+									total += c.getProduct().getPrice() * c.getAmount(); 
+						}
+					%>
+					<a class="nav-link bi bi-cart btn-person-cart-pc" id="icon-cart-pc" href="${pageContext.request.contextPath}/giohang/">
+						<% if(total > 0){
+							DecimalFormat f = new DecimalFormat("###,###,### ");
+							String tmp = f.format(total);
+							out.println(tmp + "₫");
+						}
+						%>
+					</a>
 				</li>
-				<li class="nav-item">
-					<button type="button" class="nav-link bi bi-person btn-person-pc"
-						id="btnLogin">
-						</a>
+				<li class="nav-item dropdown">
+					<%
+						User user = (User)session.getAttribute("user");
+						if(user == null)
+							out.println("<button type=\"button\" class=\"nav-link  bi bi-person btn-person-pc\" ></button>");
+						else{
+							out.println("<button type=\"button\" class=\"nav-link dropdown-toggle bi bi-person btn-person-pc\"  id=\"btnLogin\" aria-haspopup=\"true\" aria-expanded=\"false\"></button>" +
+				                       	"<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownId\">" +
+	                           			"<a class=\"dropdown-item\" href=\"#\">Thông tin cá nhân</a>"+
+	                          			"<a class=\"dropdown-item\" href=\"#\">Đơn hàng</a>"+
+	                           			"<a class=\"dropdown-item\" href=\"#\">Đăng xuất</a> </div>");
+						}
+					%>
 				</li>
 			</ul>
 

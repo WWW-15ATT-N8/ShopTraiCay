@@ -58,10 +58,10 @@
   height: auto;
   max-width: 1000px;
   margin:auto;
-  padding-top: 40px;
   border: 1px solid #e9e9e9 !important;
   border-top: 0px !important;
   color: black !important;
+  padding: 3%;
 }
 .product-informations-attributes{
     width: 100%;
@@ -133,19 +133,20 @@
   width: 100% !important;
   margin: 3vh auto !important;
 }
-.picture{
+#sptt-product .picture{
   max-width: 23.5% !important;
   margin:0 1%;
-  border: 2px dashed rgb(102, 99, 99) !important;
+  border: 2px dashed rgb(230 230 230) !important;
+  padding: 1em !important;
 }
-.picture:nth-child(1){
+#sptt-product .picture:nth-child(1){
   margin-left: 0 !important;
 }
-.picture:nth-child(4){
+#sptt-product .picture:nth-child(4){
   margin-right: 0 !important;
 }
-.picture:hover{
-  border: 2px dashed gold !important;
+#sptt-product .picture:hover{
+  border: 2px dashed rgb(39 39 39) !important;
 }
 .sanphamtuongtu-title{
   width: 92% ;
@@ -305,3 +306,55 @@
     border: 2px solid black !important;
     color: black;
   }
+#slide-img::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+#slide-img::-webkit-scrollbar
+{
+	height:5px;
+	background-color: #F5F5F5;
+}
+
+#slide-img::-webkit-scrollbar-thumb
+{
+	background-color: #b6adad;
+    border: 1px solid #898989;
+}
+
+#sptt-product  img{
+    width: 100%;
+    max-width: 277px ;
+    max-height: 277px;
+    transition: filter .6s, opacity .6s, transform .6s, box-shadow .3s;
+}
+#sptt-product .picture:hover img{
+    transform: scale(1.15,1.15);
+}
+#sptt-product .name-watch {
+    margin-top: 1em;
+    margin-bottom: 1em !important;
+    text-align: center;
+    color: black;
+    font-size: 1em;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: break-spaces;
+    height: 3em;
+}
+
+#sptt-product .picture a {
+    text-decoration: none;
+}
+#sptt-product .price {
+    text-align: center;
+    color: black;
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 0 !important;
+}

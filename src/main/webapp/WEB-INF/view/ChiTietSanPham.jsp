@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <head>
 <title>Chi Tiết Sản Phẩm - Vinfruts</title>
@@ -19,9 +22,9 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
 	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
 	crossorigin="anonymous"></script>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ChiTietSanPham.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/Navbar.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/Footer.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ChiTietSanPham.css" type="text/css">
 <!-- <script src="../js/data.js"></script>
         <script src="../js/functionsHandle.js"></script>
         <script src="../js/regex.js"></script>
@@ -37,29 +40,43 @@
 				<div class="product">
 					<div class="product-name-img">
 						<div class="product-img">
-							<div class="slideshow-container" id="slideshow"></div>
+							<div class="slideshow-container" id="slideshow">
+								<c:forEach items="${img}" var="image">
+									 <div class="mySlides"><img src="${pageContext.request.contextPath}${image.src}" class="show-picture" ></div>
+								</c:forEach>
+								<a class="prev" onclick="plusSlides(-1)">❮</a>
+								<a class="next" onclick="plusSlides(1)">❯</a>
+								<div class="row-img" id="slide-img"> 
+									<%int cnt = 1;%>
+									<c:forEach items="${img}" var="image">
+										 <div class="column"><img class="demo cursor" src="${pageContext.request.contextPath}${image.src}" onclick="currentSlide(<%=cnt%>)"></div>
+										 <%cnt += 1;%>
+									</c:forEach>
+								</div>
+							</div>
 						</div>
 						<div class="product-name">
-							<p id="path"></p>
+							<p id="path">TRANG CHỦ / ${category.name}</p>
 							<hr>
-							<h1 id="product-name-title"></h1>
-							<p id="product-name-price"></p>
+							<h1 id="product-name-title">${product.name}</h1>
+							<p id="product-name-price"><fmt:formatNumber value = "${product.price}" type = "number" maxFractionDigits = "0"/> ₫</p>
 							<hr>
-							<p id="product-name-discriptions"></p>
+							<p id="product-name-discriptions">
+								${desc}
+							</p>
 							<hr>
-							<form class="order">
-								<input type="button" value="-" id="down"
-									onclick="changeValueGH(-1)"> <input type="text"
-									value="1" id="soluong"> <input type="button" value="+"
-									id="up" onclick="changeValueGH(1)"> <input
-									type="button" value="Thêm vào giỏ" id="themGioHang"
-									onclick="valueGH()" data-toggle="modal"
-									data-target="#exampleModal">
+							<c:url var="addCart" value="/giohang/addcart"></c:url>
+							<form class="order" action="${addCart}" method="post">	
+								<input type="hidden" name="productID" value="${product.productID}" > 
+								<input type="button" value="-" id="down" onclick="changeValueGH(-1)"> 
+								<input type="text" value="1" id="soluong" name='quantity'> 
+								<input type="button" value="+" id="up" onclick="changeValueGH(1)"> 
+								<input type="submit" value="Thêm vào giỏ" id="themGioHang">
 							</form>
 							<hr>
-							<p id="danhmuc"></p>
-
-
+							<p id="danhmuc">
+							Loại sản phẩm: ${category.name}
+							</p>
 						</div>
 					</div>
 					<ul class="nav nav-tabs">
@@ -67,34 +84,34 @@
 							href="#product-informations" role="tab" data-toggle="tab">Mô
 								tả</a></li>
 						<li class="nav-item "><a class="nav-link tab-tt"
-							href="#product-guarantee" role="tab" data-toggle="tab">ĐÁNH
-								GIÁ</a></li>
+							href="#product-guarantee" role="tab" data-toggle="tab">Đánh giá</a></li>
 					</ul>
 
 					<div class="tab-content">
 						<div class="tab-pane active product-informations" role="tabpanel"
 							id="product-informations">
-							<div class="product-informations-attributes">
-								<table class="product-attributes table table-striped"
-									id="attributes">
-
-								</table>
-							</div>
+							<p id="guarantee">
+								${product.detail}
+							</p>
 						</div>
 						<div class="tab-pane product-informations guarantee"
 							role="tabpanel" id="product-guarantee">
-							<p id="guarantee">
-								<!--                                     
-                                    làm phần đánh giá nha
-                                     -->
-							</p>
+							
 						</div>
 					</div>
 
 					<div class="sanphamtuongtu">
 						<hr>
 						<span class="sanphamtuongtu-title">Một số sản phẩm tương tự</span>
-						<div class="row" id="sptt-product"></div>
+						<div class="row" id="sptt-product">
+							<c:forEach items="${sam_product}" var="product">
+								<div class=" col-6 col-md-3 picture" id="${product.productID}" >
+						            <a href="${pageContext.request.contextPath}/product/${product.productID}"><img src="${pageContext.request.contextPath}/resources/img/product_picture/img_${product.productID}_1.jpg" alt="Picture"></a>
+						            <a href="${pageContext.request.contextPath}/product/${product.productID}"><p class="name-watch">${product.name}</p></a>
+						            <p class="price"><fmt:formatNumber value = "${product.price}" type = "number" maxFractionDigits = "0"/> ₫</p>
+					        	</div>
+							</c:forEach>
+						</div>
 					</div>
 				</div>
 
@@ -115,8 +132,8 @@
 								vào giỏ thành công</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-close" data-dismiss="modal">Đóng</button>
-								<button type="button" class="btn btn-goGH" onclick="go()">Xem
-									giỏ hàng</button>
+								<a type="button" class="btn btn-goGH" href="${pageContext.request.contextPath}/giohang">Xem
+									giỏ hàng</a>
 							</div>
 						</div>
 					</div>

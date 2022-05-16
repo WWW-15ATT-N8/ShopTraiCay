@@ -1,5 +1,11 @@
+<%@page import="java.text.DecimalFormat"%>
+<%@page import="java.util.List"%>
+<%@page import="com.se.ecofruits.entity.Cart"%>
+<%@page import="com.se.ecofruits.entity.Product"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,32 +45,69 @@
 	<div class="wrapper">
 
 		<jsp:include page="./Navbar.jsp"></jsp:include>
+		
+		<%
+			DecimalFormat format = new DecimalFormat("###,###,###");
+			List<Cart> carts = (List<Cart>)request.getAttribute("carts");	
+			long total= 0;
+		%>
 
 		<div class="container-fluid">
 			<div class="giohang">
 				<div class="giohang-left">
-					<form id="form-gh" style="display: block;">
+				<c:url var="updateCart" value="/giohang/updatecart"></c:url>
+					<form id="form-gh" action="${updateCart}" method="post">
 						<table>
 							<thead>
-								<tr>
-									<th colspan="2">Sản Phẩm</th>
-									<th class="gh-price">Giá</th>
-									<th class="amount">Số lượng</th>
-									<th class="totalprice">Tổng cộng</th>
-								</tr>
+							<%
+								if(carts != null )
+									if(carts.size() > 0)
+										out.println("<tr><th colspan=\"2\">Sản Phẩm</th><th class=\"gh-price\">Giá</th><th class=\"amount\">Số lượng</th><th class=\"totalprice\">Tổng cộng</th></tr>");
+							%>
+							
 							</thead>
 
 							<tbody id="giohang-chitiet">
-
+								<%int cnt = 0;%>
+								<c:forEach items="${carts}" var="cart" >
+									<%
+										Cart c = carts.get(cnt);
+										Product p = c.getProduct();
+										total += p.getPrice() * c.getAmount();
+									%>
+									<tr>
+			                            <td id='gh-pic' class="gh-tt"><img src="${pageContext.request.contextPath}/resources/img/product_picture/img_<%=  p.getProductID()%>_1.jpg" alt="alt"></td> 
+			                            <td id='gh-name'>
+			                                <a href="${pageContext.request.contextPath}/product/<%= p.getProductID()%>">
+			                                    <p class="gh-name-watch"><%= p.getName()%></p>
+			                                </a>
+			                            </td>
+			                            <td class="gh-tt gh-price" id = "price<%=  p.getProductID()%>"><b><fmt:formatNumber value = "<%=  p.getPrice()%>" type = "number" maxFractionDigits = "0"/> ₫</b></td>
+			                            <td class="gh-tt amount" id = "gh-soluong">
+			                                <input type="button" value="-" id="down" onclick="changeValueGH(-1,<%=  p.getProductID()%>)">
+			                                <input type="text" name="amount" value="<%=  c.getAmount()%>" class="soluong" id="soluong-<%=  p.getProductID()%>">
+			                                <input type="button" value="+" id="up" onclick="changeValueGH(1,<%=  p.getProductID()%>)">
+			                            </td>
+			                            <td class="gh-tt totalprice" id = "totalprice<%=  p.getProductID()%>"><b><fmt:formatNumber value = "<%=  p.getPrice()*c.getAmount()%>" type = "number" maxFractionDigits = "0"/> ₫</b></td>
+			                        </tr>
+			                        <% cnt++; %>
+								</c:forEach>
 							</tbody>
 						</table>
-					</form>
-					<p id="thongbao-giohang" style="display: none;">Bạn không có
-						sản phẩm nào trong giỏ</p>
-					<button onclick="valueGH()" class="capnhat" id="capnhatgh">Cập
-						nhật giỏ hàng</button>
-					<button onclick="Freturn()" class="capnhat" id="quaylaiTrue">Quay
-						Lại cửa hàng</button>
+						<%
+							if(carts != null )
+								if(carts.size() > 0)
+									out.println("<input type=\"submit\" value=\"Cập nhật giỏ hàng\" class=\"capnhat\" id=\"capnhatgh\">");
+						%>
+					</form>		
+					<%
+						if(carts == null) 
+							out.println("<p id=\"thongbao-giohang\">Bạn không có sản phẩm nào trong giỏ</p>"+
+										"<button onclick=\"changeURL()\" class=\"capnhat\" id=\"quaylaiFalse\">Quay Lại cửa hàng</button>");
+						else if(carts.size() <= 0) 
+							out.println("<p id=\"thongbao-giohang\">Bạn không có sản phẩm nào trong giỏ</p>"+
+										"<button onclick=\"changeURL()\" class=\"capnhat\" id=\"quaylaiFalse\">Quay Lại cửa hàng</button>");
+					%>
 				</div>
 				<div class="giohang-right">
 					<table>
@@ -76,15 +119,22 @@
 						<tbody id="pay">
 							<tr>
 								<td>Tổng cộng</td>
-								<td id="total"></td>
+								<td id="total"><b><%= format.format(total)%> ₫</b></td>
 							</tr>
 							<tr>
 								<td>Phí vận chuyển</td>
-								<td id="feeship"><b>Giao hàng miễn phí</b></td>
+								<td id="feeship"><b><%
+														if(carts == null)
+															out.println("0 ₫");
+														else if(carts.size() <= 0)
+															out.println("0 ₫");
+														else
+															out.println("Giao hàng miễn phí");
+													%></b></td>
 							</tr>
 							<tr>
-								<td>Thuế VAT (10%)</td>
-								<td id="fee-VAT"></td>
+								<td>Thuế VAT (8%)</td>
+								<td id="fee-VAT"><b><%= format.format(0.08*total)%> ₫</b></td>
 							</tr>
 							<tr>
 								<td>Các loại phí khác</td>
@@ -92,13 +142,17 @@
 							</tr>
 							<tr id="total">
 								<td>Tổng tiền thanh toán</td>
-								<td id="totalpay"></td>
+								<td id="totalpay"><b><%= format.format(1.08*total)%> ₫</b></td>
 							</tr>
 						</tbody>
 					</table>
-					<button class="thanhtoan" id="btnthanhtoan"
-						onclick="location.href = './ThanhToan.html'">Tiến hành
-						thanh toán</button>
+					<%
+						if(carts == null || carts.size() <=0)
+							out.println("<button class=\"thanhtoan\" id=\"btnthanhtoan-disabled\"\"disabled>Tiến hành thanh toán</button>");
+						else 
+							out.println("<a href=\"/EcoFruits/thanhtoan\"><button class=\"thanhtoan\" id=\"btnthanhtoan\" >Tiến hành thanh toán</button></a>");
+					%>
+					
 				</div>
 			</div>
 		</div>
@@ -107,92 +161,24 @@
 
 	</div>
 
-	<script>
-            /* changeIconGH(); */
+		<script>
             var gh ;
             var str ="";
             var pay = 0 ;
-            var slgh = 0;
             var vat = 0;
-
-            if(localStorage.getItem("giohang") != null){
-                gh = localStorage.getItem("giohang").split(",");
-                for(var i = 0 ; i < 96 ;i++){
-                    var sl = parseInt(gh[i]);
-                    slgh += sl;
-                    if( sl > 0){
-                        total = (parseFloat(data[i].price)*sl)*1000;
-                        pay += total;    
-                        str += `<tr>
-                            <td id='gh-pic' class="gh-tt"><img src="../picture/data_picture/${data[i].picture[0]}" alt="alt"></td> 
-                            <td id='gh-name'>
-                                <a href="./ChiTietSanPham.html">
-                                    <p class="gh-name-watch">${data[i].name}</p>
-                                </a>
-                            </td>
-                            <td class="gh-tt gh-price" id = "price${i}"><b>${Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(data[i].price * 1000)}</b></td>
-                            <td class="gh-tt amount" id = "gh-soluong">
-                                <input type="button" value="-" id="down" onclick="changeValueGH(-1,${i})">
-                                <input type="text" value="${sl}" class="soluong" id="soluong-${i}">
-                                <input type="button" value="+" id="up" onclick="changeValueGH(1,${i})">
-                            </td>
-                            <td class="gh-tt totalprice" id = "totalprice${i}"><b>${ Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(total)}</b></td>
-                        </tr>` ;
-                        }   
-                }
-            }
-            localStorage.setItem("soluongsp", slgh);
-            if(slgh <= 0 ){
-                document.getElementById('thongbao-giohang').style.display = 'block';
-                document.getElementById('form-gh').style.display = 'none';
-                document.getElementById('capnhatgh').style.display = 'none';
-                document.getElementById('feeship').innerHTML = '<b>' + Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(0) + '</b>';
-                document.getElementById("btnthanhtoan").disabled = true;
-                document.getElementById("btnthanhtoan").style.backgroundColor = 'rgb(255, 243, 176)';
-                document.getElementById('quaylaiTrue').id = 'quaylaiFalse';
-
-            }
-            else{
-                document.getElementById('thongbao-giohang').style.display = 'none';
-                document.getElementById('form-gh').style.display = 'block';
-                document.getElementById('capnhatgh').style.display = 'inline';
-                document.getElementById('feeship').innerHTML = "<b>Giao hàng miễn phí</b>";
-                document.getElementById("btnthanhtoan").disabled = false;
-                document.getElementById("btnthanhtoan").style.backgroundColor = 'gold';
-            }
-            vat = pay * 0.1 ;
-            document.getElementById('fee-VAT').innerHTML =  '<b>' + Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(vat) + '</b>';
-            document.getElementById('giohang-chitiet').innerHTML = str;
-            document.getElementById('total').innerHTML = '<b>' + Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(pay) + '</b>';
-            document.getElementById('totalpay').innerHTML = '<b>' + Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(pay + vat) + '</b>';
-
-            
+            function  changeURL() {
+            	
+            	window.location.href = 'http://localhost:8080/EcoFruits/';
+				
+			}
             function changeValueGH(x,id){
-                id = 'soluong-' + String(id);
+                var id = 'soluong-' + String(id);
                 var n = document.getElementById(id).value;
                 if(!(parseInt(n)<=1 && x==-1))
                     document.getElementById(id).value = parseInt(n) + x ;
                 else{
                     document.getElementById(id).value = 0 ;
                 }
-            }
-            function valueGH(){
-                x = document.getElementsByClassName('soluong');
-                var gh = localStorage.getItem("giohang").split(",");
-                var cnt = 0;
-                for(var i = 0 ; i < x.length; i++){
-                    var tmp = (x[i].id).split('-');
-                    var id = tmp[1];
-                    var n = document.getElementById('soluong-'+id).value;
-                    gh[id] = n;
-                    cnt += parseInt(n);
-                }
-                localStorage.setItem("giohang",gh);
-                localStorage.setItem("soluongsp", cnt);
-                location.href = './GioHang.html';    
-            }
-            function Freturn(){
-                location.href = './TrangChu.html'
             }
         </script>
 </body>
