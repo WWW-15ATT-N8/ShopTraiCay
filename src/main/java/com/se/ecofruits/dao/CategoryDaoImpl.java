@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -29,13 +30,14 @@ public class CategoryDaoImpl implements CategoryDao {
 		Session currentSession = sessionFactory.getCurrentSession();
 		Query<Category> query = currentSession.createQuery("from Categories", Category.class);
 		List<Category> categories = query.getResultList();
+		System.out.println(categories);
 		return categories;
 	}
 
 	@Override
-	public void saveCategory(Category cs) {
+	public void saveCategory(Category category) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		currentSession.saveOrUpdate(cs);
+		currentSession.saveOrUpdate(category);
 	}
 
 	@Override
@@ -48,9 +50,21 @@ public class CategoryDaoImpl implements CategoryDao {
 	@Override
 	public void deleteCategory(int id) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		Query query = currentSession.createQuery("delete from category where id=:customerId");
-		query.setParameter("customerId", id);
+		Query query = currentSession.createQuery("delete from Categories where categoryID=:categoryId");
+		query.setParameter("categoryId", id);
 		query.executeUpdate();		
 	}
+
+	@Override
+	@Transactional
+	public List<Category> getCategoriesFilter(String name) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query<Category> query = currentSession.createQuery("from Categories where name like :name", Category.class);
+		query.setParameter("name", "%"+name+"%");
+		List<Category> categories = query.getResultList();
+		return categories;
+	}
+	
+	
 
 }
