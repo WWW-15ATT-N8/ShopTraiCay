@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,9 +14,9 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/Home.css" type="text/css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/Navbar.css" type="text/css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/Footer.css" type="text/css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/Home.css" type="text/css">
 	<!--  <script src="../js/data.js"></script>
 	        <script src="../js/functionsHandle.js"></script>
 	        <script src="../js/regex.js"></script>
@@ -53,9 +54,9 @@
 			<div class="row" id="row-man">
 				<c:forEach items="${list_new_product}" var="product">
 					<div class=" col-6 col-md-3 picture" id="${product.productID}" >
-			            <a href="#"><img src="#" alt="Picture"></a>
-			            <a href="#"><p class="name-watch">${product.name}</p></a>
-			            <p class="price">${product.price}</p>
+			            <a href="${pageContext.request.contextPath}/product/${product.productID}"><img src="${pageContext.request.contextPath}/resources/img/product_picture/img_${product.productID}_1.jpg" alt="Picture"></a>
+			            <a href="${pageContext.request.contextPath}/product/${product.productID}"><p class="name-watch">${product.name}</p></a>
+			            <p class="price"><fmt:formatNumber value = "${product.price}" type = "number" maxFractionDigits = "0"/> ₫</p>
 		        	</div>
 				</c:forEach>
 			</div>
@@ -73,9 +74,9 @@
 			<div class="row" id="row-woman">
 				<c:forEach items="${list_best_saler_product}" var="product">
 					<div class=" col-6 col-md-3 picture" id="${product.productID}" >
-			            <a href="#"><img src="#" alt="Picture"></a>
-			            <a href="#"><p class="name-watch">${product.name}</p></a>
-			            <p class="price">${product.price}</p>
+			            <a href="${pageContext.request.contextPath}/product/${product.productID}"><img src="${pageContext.request.contextPath}/resources/img/product_picture/img_${product.productID}_1.jpg" alt="Picture"></a>
+			            <a href="${pageContext.request.contextPath}/product/${product.productID}"><p class="name-watch">${product.name}</p></a>
+			            <p class="price"><fmt:formatNumber value = "${product.price}" type = "number" maxFractionDigits = "0"/> ₫</p>
 		        	</div>
 				</c:forEach>
 			</div>

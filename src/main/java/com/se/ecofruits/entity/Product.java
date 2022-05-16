@@ -2,6 +2,7 @@ package com.se.ecofruits.entity;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,6 +31,7 @@ public class Product implements Serializable {
 	private double price;
 	private double oldPrice;
 	private String description;
+	private String detail;
 	private int stock;
 	private double discount;
 	private boolean newProduct;
@@ -39,31 +41,45 @@ public class Product implements Serializable {
 	@JoinColumn(name = "categoryID")
 	private Category category;
 	
-//	@OneToMany(mappedBy = "product" ,fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-//	private List<Comment> comments;
-//	
-//	@OneToMany(mappedBy = "product" ,fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-//	private List<Image> images;
+	@OneToMany(mappedBy = "product" ,fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	private List<Comment> comments;
+	
+	@OneToMany(mappedBy = "product" ,fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	private List<Image> images;
+	
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Cart> carts;
+	
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Order_Detail> order_Details;
+	
 
 	public Product() {
 		super();
 	}
 
 	
-	public Product(int productID, String name, double price, double oldPrice, String description, int stock,
-			double discount, boolean newProduct, boolean bestSaler, Category category) {
+	
+
+
+	public Product(int productID, String name, double price, double oldPrice, String description, String detail,
+			int stock, double discount, boolean newProduct, boolean bestSaler, Category category) {
 		super();
 		this.productID = productID;
 		this.name = name;
 		this.price = price;
 		this.oldPrice = oldPrice;
 		this.description = description;
+		this.detail = detail;
 		this.stock = stock;
 		this.discount = discount;
 		this.newProduct = newProduct;
 		this.bestSaler = bestSaler;
 		this.category = category;
 	}
+
+
+
 
 
 	public int getProductID() {
@@ -145,17 +161,38 @@ public class Product implements Serializable {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
+	
+	
+
+	public String getDetail() {
+		return detail;
+	}
+
+
+
+
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+
+
+
+
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
+
+
+
+
 	@Override
 	public String toString() {
 		return "Product [productID=" + productID + ", name=" + name + ", price=" + price + ", oldPrice=" + oldPrice
-				+ ", description=" + description + ", stock=" + stock + ", discount=" + discount + ", newProduct="
-				+ newProduct + ", bestSaler=" + bestSaler + ", category=" + category + "]";
+				+ ", description=" + description + ", detail=" + detail + ", stock=" + stock + ", discount=" + discount
+				+ ", newProduct=" + newProduct + ", bestSaler=" + bestSaler + ", category=" + category + "]";
 	}
-	
 	
 }

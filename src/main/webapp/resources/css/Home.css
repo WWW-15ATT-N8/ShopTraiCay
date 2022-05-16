@@ -25,7 +25,6 @@
 }
 .container-fluid .row .picture{
     border: 2px dashed white;
-    margin-bottom: 5%;
     padding: 19px !important;
      display: inline-block;
 }
@@ -46,7 +45,7 @@
     text-decoration: none;
 }
 .name-watch{
-    margin-top: 5px;
+    margin-top: 10px;
     text-align: center;
     color: black;
     font-size: 1em;
@@ -55,6 +54,8 @@
     text-overflow: ellipsis;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    white-space: break-spaces;
+    height: 3em;
 }
 .name-watch:hover{
     color: gold;

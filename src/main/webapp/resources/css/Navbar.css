@@ -71,13 +71,14 @@
     display: none;
 }
 
+
 .btn-person , .btn-person-cart{
     font-size: 24px;
     background-color: #00505f;
     border: none;
 
 }
-.btn-person-pc ,.btn-person-cart-pc{
+.btn-person-pc ,.btn-person-cart-pc, .btn-person-pc-null{
     padding-right: 0.7rem !important;
     padding-left: 0.7rem !important;
     font-size: 15px;
@@ -104,6 +105,14 @@ small{
 }
 .navcenter li{
     margin:0 .3vw !important;
+}
+
+.btn-person-cart-pc{
+    border: 1px solid gold !important;
+    border-radius: 7px !important;
+}
+.btn-person-cart-pc:hover{
+    border: 3px solid gold;
 }
 
 @media (max-width: 575.98px){
