@@ -1,10 +1,12 @@
 package com.se.ecofruits.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
@@ -18,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.se.ecofruits.entity.Category;
+import com.se.ecofruits.entity.Image;
 import com.se.ecofruits.entity.Product;
 import com.se.ecofruits.service.CategoryService;
+import com.se.ecofruits.service.ImageService;
 import com.se.ecofruits.service.ProductService;
 
 @Controller
@@ -34,10 +38,11 @@ public class ProductAdminController {
 	@Autowired
 	CategoryService categoryService;
 	
+	@Autowired
+	ImageService imageService;
+	
 	@GetMapping("/list")
-	public String list(HttpServletRequest request, Model model, 
-			@RequestParam(value = "bestSaler", required = false) String bestSaler,
-			@RequestParam(value = "newProduct", required = false) String newProduct) {
+	public String list(HttpServletRequest request, Model model) {
 		List<Product> products = null;
 		List<Category> categories = categoryService.getCategories();
         // add the customers to the model
@@ -51,14 +56,12 @@ public class ProductAdminController {
 			int categoryID = Integer.parseInt(request.getParameter("category"));
 			String[] rangePrice = request.getParameter("price").split(";");
 			String[] rangStock = request.getParameter("stock").split(";");
-			boolean isBestSaler = bestSaler == null ? false : true;
-			boolean isNewProduct = newProduct == null ? false : true;
-			String pathBestSaler = isBestSaler ? "bestSaler=on" : "";
-			String pathNewProduct = isNewProduct ? "newProduct=on" : "";
+			String isBestSaler = request.getParameter("bestSaler");
+			String isNewProduct = request.getParameter("newProduct");
 			
 			products = productService.getProductsFilter(name, categoryID, isNewProduct, isBestSaler, rangePrice, rangStock);
 			
-			model.addAttribute("url" , PATH_CONTEXT + "/admin/product/list?name="+ name +"&category="+categoryID+"&"+pathBestSaler+"&"+pathNewProduct+"&price="+rangePrice[0]+"%3B"+rangePrice[1]+"&stock="+rangStock[0]+"%3B"+rangStock[1]+"&");
+			model.addAttribute("url" , PATH_CONTEXT + "/admin/product/list?name="+ name +"&category="+categoryID+"&bestSaler="+isBestSaler+"&newProduct"+isNewProduct+"&price="+rangePrice[0]+"%3B"+rangePrice[1]+"&stock="+rangStock[0]+"%3B"+rangStock[1]+"&");
 			model.addAttribute("categoryID", categoryID);
 			model.addAttribute("bestSaler", isBestSaler);
 			model.addAttribute("newProduct", isNewProduct);
@@ -89,7 +92,8 @@ public class ProductAdminController {
 	}
 	
 	@GetMapping("/create")
-	public String create(Model model) {
+	public String create(Model model, HttpServletRequest request, HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
 		List<Category> categories = categoryService.getCategories();
 		model.addAttribute("product", new Product());
 		model.addAttribute("categories", categories);
@@ -97,11 +101,13 @@ public class ProductAdminController {
 	}
 	
 	@PostMapping("/save")
-    public String saveProduct(@ModelAttribute("product") Product product, @ModelAttribute("categoryID") int categoryID) {
-		System.out.println(categoryID);
+    public String saveProduct(@ModelAttribute("product") Product product, @ModelAttribute("categoryID") int categoryID, HttpServletResponse response) throws UnsupportedEncodingException {
+		
+		System.out.println(new String(product.getName().getBytes("UTF-8")));
 		Category category = categoryService.getCategory(categoryID);
 		product.setCategory(category);
 		productService.saveProduct(product);
+		System.out.println(product.getName());
         return "redirect:/admin/product/update?productID="+product.getProductID();
     }
 	
@@ -109,12 +115,11 @@ public class ProductAdminController {
 	public String update(@RequestParam("productID") int id, Model model) {
 		Product product = productService.getProduct(id);
 		List<Category> categories = categoryService.getCategories();
+		List<Image> images = imageService.getImagesByProductID(id);
+		model.addAttribute("images",images);
 		model.addAttribute("categories", categories);
 		model.addAttribute("categoryID", product.getCategory().getCategoryID());
 		model.addAttribute("product", product);
-		byte[] ptext = product.getName().getBytes(ISO_8859_1); 
-		product.setName(new String(ptext, UTF_8)); 
-		System.out.println();
 		return "product-form";
 	}
 	

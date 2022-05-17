@@ -29,6 +29,11 @@ public class Image implements Serializable {
 	@JoinColumn(name="productID")
 	private Product product;
 	
+	public Image(String src, Product product) {
+		super();
+		this.src = src;
+		this.product = product;
+	}
 	public Image(String imageID, String src, Product product) {
 		super();
 		this.imageID = imageID;

@@ -18,8 +18,6 @@ import org.hibernate.annotations.ParamDef;
 
 @Entity(name = "Categories")
 @Table(name = "Categories")
-@FilterDef(name = "nameFilter" ,parameters = { @ParamDef(name = "name", type = "string") })
-@Filter(name = "nameFilter" ,condition = "name like %:name%")
 public class Category implements Serializable {
 	/**
 	 * 

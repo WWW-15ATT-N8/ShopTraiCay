@@ -5,10 +5,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,27 +24,44 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.se.ecofruits.entity.Category;
+import com.se.ecofruits.entity.Image;
 import com.se.ecofruits.entity.Product;
+import com.se.ecofruits.service.ImageService;
+import com.se.ecofruits.service.ProductService;
 
 @Controller
+@RequestMapping("/admin/image")
 public class ImageAdminController {
+	public static final String PATH_STORE_ROOT = "\\resources\\img\\product\\";
+	
+	@Autowired
+	private ImageService imageService;
+	
+	@Autowired
+	private ProductService productService;
+	
 	@RequestMapping("/loadImgForm")
 	public String showForm() {
 		
 		return "UploadImg";
 	}
 
-	@RequestMapping(value="/savefile",method=RequestMethod.POST)  
-	public String upload(@RequestParam MultipartFile[] files,HttpServletRequest request, Model model){  
-		String fileName = null;
-		for (MultipartFile file : files) {
-			fileName = saveImage(file, request);
-			
-			break;
+	@RequestMapping(value="/save",method=RequestMethod.POST)  
+	public String upload(@RequestParam MultipartFile[] files,@RequestParam int productID, HttpServletRequest request, Model model){  
+		
+		Product product = productService.getProduct(productID);
+		List<Image> images = imageService.getImagesByProductID(productID);
+		if (images.size() != 0) {
+			for (Image image : images) {
+				imageService.deleteImage(image);
+			}
 		}
-		System.out.println("img "+  fileName);
-		model.addAttribute("fileName", fileName);
-		return "upload-success";
+		
+		for (MultipartFile file : files) {
+			String src = PATH_STORE_ROOT+saveImage(file, request);
+			imageService.saveImage(new Image(src, product));
+		}
+		return "redirect:/admin/product/list";
 	} 
 	
 	public String saveImage(MultipartFile file, HttpServletRequest request) {
@@ -56,10 +75,10 @@ public class ImageAdminController {
 				
 				path = path.replace(".metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\", "");
 				
-				System.out.println(path+"src\\main\\webapp\\resources\\img\\"+filename);  
+				System.out.println(path+"src\\main\\webapp"+PATH_STORE_ROOT+filename);  
 				
 				BufferedOutputStream bout=new BufferedOutputStream(  
-						new FileOutputStream(path+"src\\main\\webapp\\resources\\img\\"+filename));  
+						new FileOutputStream(path+"src\\main\\webapp"+PATH_STORE_ROOT+filename));  
 				bout.write(barr);  
 				bout.flush();  
 				bout.close();  
@@ -68,7 +87,6 @@ public class ImageAdminController {
 			}catch(Exception e){System.out.println(e);} 
 		}
 		return filename;
-		
 	}
 	
 }

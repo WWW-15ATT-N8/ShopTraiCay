@@ -60,7 +60,7 @@ public class Product implements Serializable {
 
 	
 	
-
+	
 
 	public Product(int productID, String name, double price, double oldPrice, String description, String detail,
 			int stock, double discount, boolean newProduct, boolean bestSaler, Category category) {

@@ -1,21 +1,29 @@
 package com.se.ecofruits.config;
 
 import java.beans.PropertyVetoException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import java.util.logging.Logger;
+
 
 import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -70,6 +78,13 @@ public class DemoAppConfig implements WebMvcConfigurer {
 
         return myDataSource;
     }
+    
+    @Bean
+    public MultipartResolver multipartResolver() {
+    	CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+    	multipartResolver.setMaxUploadSize(1000000);
+    	return multipartResolver;
+    }
 
     private Properties getHibernateProperties() {
 
@@ -92,6 +107,13 @@ public class DemoAppConfig implements WebMvcConfigurer {
         int intPropVal = Integer.parseInt(propVal);
 
         return intPropVal;
+    }
+    
+    @Bean
+    public MessageSource messageSource() {
+    	ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
+    	resourceBundleMessageSource.setBasenames("resources/messages");
+    	return resourceBundleMessageSource;
     }
 
     @Bean

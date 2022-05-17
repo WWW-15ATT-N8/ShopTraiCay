@@ -10,7 +10,6 @@
 <body>
 	
 	<ul class="pagination float-right">
-		
 		<%
 		int pageLenght = Integer.parseInt(request.getParameter("pageCount"));
 		int pageCurrent = Integer.parseInt(request.getParameter("pageCurrent"));
