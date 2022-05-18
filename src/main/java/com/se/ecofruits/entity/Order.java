@@ -14,8 +14,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.springframework.web.jsf.FacesContextUtils;
+
 
 @Entity(name = "Orders")
 @Table(name = "Orders")
@@ -27,12 +31,21 @@ public class Order implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int orderID;
+	
 	@Column(name ="createdAt")
 	private Date createdDate;
+	
 	private double total;
+	
 	@Column(name = "shipAddess")
+	@NotNull(message = "is required")
+	@Size(min = 1, message = "is required")
 	private String shipAddress;
+	
+	@NotNull(message = "is required")
+	@Pattern(regexp = "^0[0-9]{9}", message = "* Số điện thoại có đúng 10 kí tự số")
 	private String shipPhone;
+	
 	private String comment;
 	private float discount;
 	

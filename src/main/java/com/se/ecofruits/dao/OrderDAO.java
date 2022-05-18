@@ -11,4 +11,5 @@ public interface OrderDAO {
 	public void updateOrder(Order order);
 	public void deleteOrder(Order order);
 	public int getMaxID();
+	public List<Order> getOrdersByDK(String dk);
 }

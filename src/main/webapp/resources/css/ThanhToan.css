@@ -9,7 +9,7 @@
 #thanhtoan .row
 {
     max-width: 1222.5px !important;
-    margin: 5vh auto;
+    margin: 1vh auto;
 }
 #thanhtoan-soluong{
     min-width: 50px;
@@ -94,4 +94,8 @@ textarea{
     .tt-name{
         width: 100% !important;
     }
+}
+
+.note{
+	color: red !important;
 }

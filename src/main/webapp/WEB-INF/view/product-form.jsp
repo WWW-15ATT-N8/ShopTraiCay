@@ -26,6 +26,7 @@
 <link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.1/css/OverlayScrollbars.min.css">
 </head>
+
 <body>
 
 <div class="wrapper">
@@ -71,7 +72,6 @@
 										</button>
 									</div>
 								</div>
-								<% request.setCharacterEncoding("UTF-8"); %>
 									
 									<div class="card-body collapse show">
 									<form:form modelAttribute="product" method="POST" action="${pageContext.request.contextPath}/admin/product/save">
@@ -80,12 +80,7 @@
 											<div class="col-6">
 												<div class="form-group">
 													<label>Name:</label> 
-													<% Product product = (Product) request.getAttribute("product");
-													 String name = product.getName();
-													 System.out.print(name);%>
-													<form:input path="name" name="name" value="<%= name %>" class="form-control" placeholder="Name"/>
-													
-													
+													<form:input path="name" name="name" class="form-control" placeholder="Name"/>	
 												</div>
 												<div class="form-group">
 													<label>Category:</label> 

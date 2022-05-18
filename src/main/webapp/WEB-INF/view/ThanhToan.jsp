@@ -34,7 +34,7 @@
 			<jsp:include page="Navbar.jsp"></jsp:include>
 	
 			<% 
-				List<Cart> carts = (List<Cart>)request.getAttribute("carts"); 
+				List<Cart> carts = (List<Cart>)session.getAttribute("carts"); 
 				int cnt = 0;
 				int total = 0;
 				for(Cart c : carts)
@@ -47,7 +47,7 @@
                     
                     	<c:url var="saveOrder" value="/order/saveorder"></c:url>
                     	
-                        <form:form class="thanhtoan" method="post" action="${saveOrder}" modelAttribute="Order" accept-charset="ISO-8859-1">
+                        <form:form class="thanhtoan"  action="${saveOrder}" modelAttribute="Order" accept-charset="ISO-8859-1" method="post">
                         	<form:input type="hidden" path="total"  value="<%= total%>"/>
                             <p id="tt-tt">Thông tin thanh toán</p>
                             <div class="row">
@@ -68,14 +68,16 @@
                                 <div class="col-12">
                                     <label>Địa chỉ: </label>
                                     <form:input accept-charset="ISO-8859-1" path="shipAddress"  type="text" id="thanhtoan-add" placeholder="13, Đường Nguyễn Văn Bảo, Quận Gò Vấp" />
-                                    <small id="thanhtoan-add-note" class="form-text note"></small>
+                                   	<br><form:errors cssClass="error" class="form-text note" path="shipAddress" />
+                                    <!-- <small id="thanhtoan-add-note" class="form-text note"></small> -->
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
                                     <label>Số điện thoại: </label><br/>
                                     <form:input accept-charset="ISO-8859-1" path="shipPhone"  type="text" id="thanhtoan-tel" placeholder="0xxx-xxx-xxx" />
-                                    <small id="thanhtoan-tel-note" class="form-text note"></small>
+                                    <br><form:errors  cssClass="error" class="form-text note" path="shipPhone" />
+                                   <!--  <small id="thanhtoan-tel-note" class="form-text note"></small> -->
                                 </div>
                             </div>
 <!--                             <div class="row">
