@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity(name = "Users")
 @Table(name = "Users")
@@ -19,10 +21,22 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int userID;
+	
+	@NotNull(message = "is required")
 	private String fullName;
+	
+	@NotNull(message = "is required")
 	private String address;
+	
+	@NotNull(message = "is required")
 	private String email;
+	
+	@NotNull(message = "is required")
+	@Pattern(regexp = "^0[0-9]{9}", message = "* Phone must have 10 numeric characters")
 	private String phone;
+	
+	@NotNull(message = "is required")
+	@Pattern(regexp = "\"^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$\"", message = "* Minimum eight characters, at least one letter and one number")
 	private String password;
 	
 	@ManyToOne

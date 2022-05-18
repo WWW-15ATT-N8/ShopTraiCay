@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
@@ -29,7 +30,9 @@ public class Category implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int categoryID;
 	
+	@NotNull(message = "is required")
 	private String name;
+	
 	private String description;
 	
 	@OneToMany(mappedBy = "category" ,fetch = FetchType.EAGER, cascade=CascadeType.ALL)
@@ -54,6 +57,7 @@ public class Category implements Serializable {
 		this.categoryID = categoryID;
 	}
 
+	
 	public String getName() {
 		return name;
 	}

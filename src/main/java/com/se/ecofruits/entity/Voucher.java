@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "Vouchers")
@@ -22,10 +24,21 @@ public class Voucher implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int voucherID;
+	
+	@NotNull(message = "is required")
+	@Size(min = 0, max =100, message = "Discount equal or greater than 0")
 	private double discount;
+	
+	@NotNull(message = "is required")
+	@Size(min = 0, message = " *equal or greater than 0")
 	private double minTotal;
+	
 	private String code;
+	
+	@NotNull(message = "is required")
+	@Size(min = 0, message = "Amount equal or greater than 0")
 	private int amount;
+	
 	private Date startDate;
 	
 	public Voucher(int voucherID, double discount, double minTotal, String code, int amount, Date startDate) {

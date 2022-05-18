@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity(name = "Products")
 @Table(name = "Products")
@@ -27,13 +29,30 @@ public class Product implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int productID;
+	
+	@NotNull(message = "is required")
 	private String name;
+	
+	@NotNull(message = "is required")
+	@Size(min = 0, max =100, message = "Price mustn't less than 0")
 	private double price;
+	
+	@NotNull(message = "is required")
 	private double oldPrice;
+	
+	@NotNull(message = "is required")
 	private String description;
+	
+	@NotNull(message = "is required")
 	private String detail;
+	
+	@NotNull(message = "is required")
+	@Size(min = 1, message = " Stock equal or greater than 1 ")
 	private int stock;
+	
+	@Size(min = 0, max =100, message = "Discount equal or greater than 0")
 	private double discount;
+	
 	private boolean newProduct;
 	private boolean bestSaler;
 	

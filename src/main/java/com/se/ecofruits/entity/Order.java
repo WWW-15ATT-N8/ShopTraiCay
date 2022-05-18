@@ -43,7 +43,7 @@ public class Order implements Serializable {
 	private String shipAddress;
 	
 	@NotNull(message = "is required")
-	@Pattern(regexp = "^0[0-9]{9}", message = "* Số điện thoại có đúng 10 kí tự số")
+	@Pattern(regexp = "^0[0-9]{9}", message = "* Phone must have 10 numeric characters")
 	private String shipPhone;
 	
 	private String comment;
