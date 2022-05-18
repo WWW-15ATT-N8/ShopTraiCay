@@ -29,6 +29,11 @@ public class CategoryAdminController {
 	@Autowired
 	CategoryService categoryService;
 	
+	@GetMapping("/")
+	public String defaultCategory() {
+		return "redirect:/admin/category/list";
+	}
+	
 	@GetMapping("/list")
 	public String list(HttpServletRequest request, Model model) {
         // add the customers to the model

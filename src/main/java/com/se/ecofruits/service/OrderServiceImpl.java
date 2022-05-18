@@ -67,4 +67,11 @@ public class OrderServiceImpl implements OrderService{
 		return orderDAO.getMaxID();
 	}
 
+	@Override
+	@Transactional
+	public List<Order> getOrdersByDK(String dk) {
+		// TODO Auto-generated method stub
+		return orderDAO.getOrdersByDK(dk);
+	}
+
 }

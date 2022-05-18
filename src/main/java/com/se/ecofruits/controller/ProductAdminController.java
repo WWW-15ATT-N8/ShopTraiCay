@@ -34,6 +34,11 @@ public class ProductAdminController {
 	@Autowired
 	CategoryService categoryService;
 	
+	@GetMapping("/")
+	public String defaultProduct() {
+		return "redirect:/admin/product/list";
+	}
+	
 	@GetMapping("/list")
 	public String list(HttpServletRequest request, Model model, 
 			@RequestParam(value = "bestSaler", required = false) String bestSaler,

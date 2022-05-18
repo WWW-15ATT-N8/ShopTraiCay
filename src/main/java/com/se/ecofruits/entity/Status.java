@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-@Entity
+@Entity(name = "Statuses")
 @Table(name = "Statuses")
 public class Status implements Serializable {
 	/**
@@ -39,11 +39,19 @@ public class Status implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	public Status(int statusID, String name) {
 		super();
 		this.statusID = statusID;
 		this.name = name;
 	}
+	
 	public Status() {
 		super();
 	}

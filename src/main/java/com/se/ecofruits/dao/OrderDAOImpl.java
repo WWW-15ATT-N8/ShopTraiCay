@@ -61,4 +61,12 @@ public class OrderDAOImpl implements OrderDAO {
 		return max;
 	}
 
+	@Override
+	public List<Order> getOrdersByDK(String dk) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query<Order> query = currentSession.createQuery("from Orders " + dk , Order.class);
+		List<Order> orders = query.getResultList();
+		return orders;
+	}
+
 }
