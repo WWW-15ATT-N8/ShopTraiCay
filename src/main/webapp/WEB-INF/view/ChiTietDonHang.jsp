@@ -1,3 +1,5 @@
+<%@page import="java.util.List"%>
+<%@page import="com.se.ecofruits.entity.Order_Detail"%>
 <%@page import="com.se.ecofruits.entity.Order"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -33,14 +35,21 @@
 		<div class="container-fluid">
 			<%
 			 	Order o = (Order)request.getAttribute("ORDER");
-				
+				List<Order_Detail> od = (List<Order_Detail>)request.getAttribute("ORDERDETAIL");
 			%>
 			
+			<p> <%= o.getOrderID()%> </p>
+			
+			<p> <%= o.getShipPhone()%> </p>
 			<p> <%= o.getShipAddress()%> </p>
 			<p> <%= o.getComment()%> </p>
-			<form:form >
-				<input value="<%= o.getShipAddress()%>"/>			
-			</form:form>
+			
+			<c:forEach items="${ORDERDETAIL}" var="detail">
+			<p> ${detail.product.name} </p>
+			<p> ${detail.amount} </p>
+			<p> ${detail.price} </p>
+			</c:forEach>
+		
 
 		</div>
 		<jsp:include page="Footer.jsp"></jsp:include>

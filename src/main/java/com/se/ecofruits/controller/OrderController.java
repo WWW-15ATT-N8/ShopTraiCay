@@ -23,6 +23,7 @@ import com.se.ecofruits.entity.Order;
 import com.se.ecofruits.entity.Order_Detail;
 import com.se.ecofruits.entity.Status;
 import com.se.ecofruits.entity.User;
+import com.se.ecofruits.service.OrderDetailService;
 import com.se.ecofruits.service.OrderService;
 import com.se.ecofruits.service.UserService;
 
@@ -35,6 +36,9 @@ public class OrderController {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private OrderDetailService orderDetailService;
 	
 	@PostMapping("/saveorder")
 	public String saveOrder(HttpServletRequest request, HttpSession session,
@@ -71,8 +75,11 @@ public class OrderController {
 	public String getOrder(HttpServletRequest request, HttpSession session,
 							@PathVariable int orderID, Model theModel) {
 		Order o = orderService.getOrder(orderID);
+		List<Order_Detail> OrderDetails = orderDetailService.getOrdersDetailsByProductId(o.getOrderID());
+		System.out.println(OrderDetails);
 		System.out.println(o);
 		theModel.addAttribute("ORDER", o);
+		theModel.addAttribute("ORDERDETAIL", OrderDetails);
 		return "ChiTietDonHang";
 	}
 }

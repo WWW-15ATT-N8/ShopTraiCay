@@ -91,7 +91,7 @@
 				<li class="nav-item dropdown">
 					<%
 						User user = (User)session.getAttribute("user");
-						if(user == null)
+						if(user != null)
 							out.println("<button type=\"button\" class=\"nav-link  bi bi-person btn-person-pc\" ></button>");
 						else{
 							out.println("<button type=\"button\" class=\"nav-link dropdown-toggle bi bi-person btn-person-pc\"  id=\"btnLogin\" aria-haspopup=\"true\" aria-expanded=\"false\"></button>" +

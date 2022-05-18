@@ -10,4 +10,5 @@ public interface OrderDetailDAO {
 	public void saveOrderDetail(Order_Detail order_Detail);
 	public void updateOrderDetail(Order_Detail order_Detail);
 	public void deleteOrderDetail(Order_Detail order_Detail);
+	public List<Order_Detail> getOrdersDetailsByProductId(int id);
 }

@@ -47,4 +47,15 @@ public class OrderDetailDAOImpl implements OrderDetailDAO{
 		currentSession.delete(order_Detail);
 	}
 
+	@Override
+	@Transactional
+	public List<Order_Detail> getOrdersDetailsByProductId(int id) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query query = currentSession.createQuery("from Order_Detail where orderID=:orderid", Order_Detail.class);
+		query.setParameter("orderid", id);
+		List<Order_Detail> order_Details = query.getResultList();
+		return order_Details;
+	}
+	
+
 }
